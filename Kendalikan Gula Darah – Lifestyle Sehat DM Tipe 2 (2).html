@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kendalikan Gula Darah – Lifestyle Sehat DM Tipe 2</title>
+<style>
+:root{
+  --bg:#FFF5F7; --surface:#FFFFFF; --ink:#3A1722; --muted:#7A5560; --line:#F0D4DB;
+  --accent:#C73F6C; --accent-ink:#FFFFFF; --accent-text:#B02F5B; --soft:#FBE3EA;
+  --warn:#9A4A0A; --warn-soft:#FFF0DC; --warn-bar:#E08A2E;
+  --ok:#1B7A43; --ok-soft:#DDF2E4; --bad:#B3261E; --bad-soft:#FDE4E2; --head:#FBE3EA;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#1B0F14; --surface:#251319; --ink:#F3E9EC; --muted:#BBA4AB; --line:#3C232B;
+    --accent:#C73F6C; --accent-ink:#FFFFFF; --accent-text:#F59AB3; --soft:#35192A;
+    --warn:#F0B27A; --warn-soft:#3A2412; --warn-bar:#E08A2E;
+    --ok:#7BD59B; --ok-soft:#173523; --bad:#FF9C94; --bad-soft:#40181A; --head:#321820;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#1B0F14; --surface:#251319; --ink:#F3E9EC; --muted:#BBA4AB; --line:#3C232B;
+  --accent:#C73F6C; --accent-ink:#FFFFFF; --accent-text:#F59AB3; --soft:#35192A;
+  --warn:#F0B27A; --warn-soft:#3A2412; --warn-bar:#E08A2E;
+  --ok:#7BD59B; --ok-soft:#173523; --bad:#FF9C94; --bad-soft:#40181A; --head:#321820;
+}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;font-size:16px;line-height:1.55}
+h1,h2,h3{line-height:1.2;margin:0 0 .5em}
+h1{font-size:clamp(1.8rem,7vw,2.5rem)}
+h2{font-size:1.45rem}
+h3{font-size:1.05rem}
+p{margin:0 0 .9em}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--accent-text);outline-offset:2px}
+
+.shell{max-width:760px;margin:0 auto;padding:0 16px 48px}
+nav.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:var(--bg);display:flex;gap:6px;overflow-x:auto;padding:12px 0 10px;scrollbar-width:none}
+nav.tabs::-webkit-scrollbar{display:none}
+nav.tabs button{flex:none;background:none;border:0;border-radius:999px;padding:8px 14px;color:var(--ink)}
+nav.tabs button[aria-selected="true"]{background:var(--accent);color:var(--accent-ink)}
+
+section.page{display:none;padding-top:8px}
+section.page.active{display:block}
+
+.hero{background:var(--accent);color:var(--accent-ink);border-radius:20px;padding:26px 22px;margin-bottom:16px}
+.hero h1{margin-bottom:.35em}
+.hero p{margin-bottom:.7em}
+.hero small{display:block;opacity:.92;font-size:.85rem}
+.grid{display:grid;gap:12px;grid-template-columns:1fr 1fr;margin-bottom:16px}
+@media(max-width:380px){.grid{grid-template-columns:1fr}}
+.grid button{text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px}
+.grid button strong{display:block;margin-bottom:2px}
+.grid button span{color:var(--muted);font-size:.88rem}
+.note{border-left:4px solid var(--warn-bar);background:var(--warn-soft);color:var(--ink);border-radius:10px;padding:14px 16px;margin:0 0 14px}
+.note.bad{border-left-color:var(--bad);background:var(--bad-soft)}
+.note strong:first-child{display:block;margin-bottom:4px}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:14px}
+.card h3{margin-bottom:.45em}
+.card ul{margin:0;padding-left:1.15em}
+.card li{margin-bottom:.4em}
+.card li:last-child{margin-bottom:0}
+.card p:last-child{margin-bottom:0}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 16px;margin:0}
+.kv dt{font-weight:700}
+.kv dd{margin:0;color:var(--muted)}
+
+/* Checklist */
+.lead{color:var(--muted);font-size:.9rem}
+.stat{color:var(--muted);font-size:.88rem;margin:6px 0}
+.bar{height:8px;background:var(--soft);border-radius:999px;overflow:hidden;margin-bottom:14px}
+.bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .3s}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:620px}
+th,td{border:1px solid var(--line);padding:8px;text-align:center}
+th{background:var(--head);font-size:.9rem}
+th:first-child,td:first-child{text-align:left;min-width:120px;position:sticky;left:0;background:var(--surface);z-index:1}
+th:first-child{background:var(--head)}
+td input[type=checkbox]{width:22px;height:22px;accent-color:var(--accent)}
+td input[type=number]{width:64px;font:inherit;text-align:center;padding:8px 4px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+td input.ok{border-color:var(--ok);background:var(--ok-soft)}
+td input.mid{border-color:var(--warn-bar);background:var(--warn-soft)}
+td input.bad{border-color:var(--bad);background:var(--bad-soft)}
+.legend{font-size:.85rem;color:var(--muted);margin:10px 0 14px}
+.btn{background:var(--accent);color:var(--accent-ink);border:0;border-radius:999px;padding:11px 20px;font-weight:700}
+.btn.ghost{background:none;border:1.5px solid var(--line);color:var(--ink)}
+
+/* Kuis */
+.q-meta{color:var(--muted);font-size:.88rem;margin-bottom:6px}
+.opt{display:block;width:100%;text-align:left;background:var(--surface);border:1.5px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:10px}
+.opt.right{border-color:var(--ok);background:var(--ok-soft)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.opt:disabled{cursor:default;color:inherit}
+.explain{color:var(--muted);margin:6px 0 14px}
+.score{font-size:3rem;font-weight:700;color:var(--accent-text);margin:0}
+
+ol.refs{padding-left:1.2em;margin:0 0 14px}
+ol.refs li{margin-bottom:10px}
+.tip{color:var(--muted);font-size:.88rem}
+.themebtn{float:right;margin-top:-4px}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="shell">
+  <nav class="tabs" role="tablist" aria-label="Menu utama">
+    <button role="tab" data-tab="beranda" aria-selected="true">Beranda</button>
+    <button role="tab" data-tab="materi" aria-selected="false">Materi</button>
+    <button role="tab" data-tab="tips" aria-selected="false">Tips</button>
+    <button role="tab" data-tab="checklist" aria-selected="false">Checklist</button>
+    <button role="tab" data-tab="kuis" aria-selected="false">Kuis</button>
+    <button role="tab" data-tab="referensi" aria-selected="false">Referensi</button>
+  </nav>
+
+  <main>
+    <!-- BERANDA -->
+    <section class="page active" id="beranda">
+      <div class="hero">
+        <h1>Kendalikan Gula Darah</h1>
+        <p>Panduan singkat lifestyle sehat untuk pasien diabetes melitus tipe 2: kenali penyakitnya, atur kebiasaan harian, dan pantau gula darahmu.</p>
+        <small>Disusun oleh: Juwita Safitri · Mata kuliah: Praktik Teknologi Prosedur Keperawatan DM · Dosen: Ns. Novi Indriani, M.Tr.Kep</small>
+      </div>
+      <div class="grid">
+        <button data-go="materi"><strong>Materi</strong><span>Kenali diabetes tipe 2</span></button>
+        <button data-go="tips"><strong>Tips</strong><span>Self-management harian</span></button>
+        <button data-go="checklist"><strong>Checklist</strong><span>Pantau kebiasaan</span></button>
+        <button data-go="kuis"><strong>Kuis</strong><span>Uji pemahaman</span></button>
+        <button data-go="referensi"><strong>Referensi</strong><span>Sumber bacaan</span></button>
+      </div>
+      <div class="note"><strong>Catatan:</strong> Aplikasi ini hanya untuk edukasi dan tidak menggantikan saran dokter atau tenaga kesehatan.</div>
+    </section>
+
+    <!-- MATERI -->
+    <section class="page" id="materi">
+      <h2>Materi: lifestyle sehat pada pasien DM tipe 2</h2>
+      <div class="card">
+        <h3>Gambaran singkat DM tipe 2</h3>
+        <p>Diabetes melitus (DM) tipe 2 adalah kondisi saat tubuh tidak menggunakan insulin dengan baik dan/atau produksi insulin kurang, sehingga gula darah tinggi. Penyakit ini berlangsung seumur hidup dan dapat dikendalikan, terutama dengan gaya hidup sehat.</p>
+      </div>
+      <div class="card">
+        <h3>Apa itu lifestyle sehat dan mengapa penting?</h3>
+        <p>Lifestyle sehat adalah kebiasaan sehari-hari yang membantu mengendalikan gula darah: cara makan, aktivitas fisik, berat badan, tidur, stres, merokok, serta kepatuhan pemantauan dan pengobatan.</p>
+        <ul>
+          <li>Menjadi dasar penatalaksanaan DM tipe 2, bersama obat bila diperlukan</li>
+          <li>Membantu menurunkan gula darah, tekanan darah, dan kolesterol</li>
+          <li>Pada pasien dengan berat badan berlebih, penurunan berat badan sekitar 5–10% membantu memperbaiki kontrol gula darah</li>
+          <li>Menurunkan risiko komplikasi pada mata, ginjal, saraf, jantung, dan kaki</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Komponen lifestyle sehat</h3>
+        <ul>
+          <li><strong>Pola makan (terapi gizi):</strong> teratur dan sesuai kebutuhan</li>
+          <li><strong>Aktivitas fisik:</strong> rutin dan terukur</li>
+          <li><strong>Berat badan ideal:</strong> hindari kelebihan berat badan</li>
+          <li><strong>Tanpa rokok dan batasi alkohol</strong></li>
+          <li><strong>Tidur cukup dan kelola stres</strong></li>
+          <li><strong>Patuh obat dan pantau gula darah</strong></li>
+          <li><strong>Perawatan kaki dan kontrol berkala</strong></li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Pola makan sehat pada DM tipe 2</h3>
+        <p>Prinsip 3J: <strong>jadwal</strong> teratur, <strong>jumlah</strong> sesuai kebutuhan, <strong>jenis</strong> yang tepat. Model piringnya: ½ sayur, ¼ lauk, ¼ makanan pokok.</p>
+        <dl class="kv">
+          <dt>Dianjurkan</dt><dd>Sayur, buah utuh dalam porsi wajar, karbohidrat berserat (nasi dalam porsi terukur, ubi, jagung, oat), lauk rendah lemak (ikan, ayam tanpa kulit, tempe, tahu), air putih</dd>
+          <dt>Dibatasi</dt><dd>Gula dan minuman manis, kue manis, gorengan, makanan berlemak tinggi, makanan olahan, makanan asin (garam kurang dari 5 gram atau sekitar 1 sendok teh per hari)</dd>
+        </dl>
+      </div>
+      <div class="card">
+        <h3>Aktivitas fisik</h3>
+        <ul>
+          <li>Aerobik intensitas sedang (jalan cepat, senam, bersepeda) sekitar 150 menit per minggu, dibagi 3–5 hari</li>
+          <li>Latihan kekuatan otot 2–3 kali per minggu</li>
+          <li>Kurangi duduk terlalu lama, selingi dengan bergerak ringan</li>
+          <li>Manfaat: otot lebih peka terhadap insulin sehingga gula darah lebih terkontrol</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Kebiasaan lain yang mendukung</h3>
+        <ul>
+          <li><strong>Berhenti merokok:</strong> merokok memperberat risiko penyakit jantung dan pembuluh darah</li>
+          <li><strong>Tidur 7–8 jam dan kelola stres:</strong> stres dan kurang tidur dapat menaikkan gula darah</li>
+          <li><strong>Patuh obat dan pantau gula darah:</strong> jangan berhenti atau mengubah dosis sendiri</li>
+          <li><strong>Rawat kaki dan kontrol berkala:</strong> deteksi dini komplikasi, HbA1c umumnya tiap 3 bulan</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Target yang ingin dicapai</h3>
+        <dl class="kv">
+          <dt>Gula darah puasa</dt><dd>80–130 mg/dL</dd>
+          <dt>2 jam setelah makan</dt><dd>&lt; 180 mg/dL</dd>
+          <dt>HbA1c</dt><dd>&lt; 7% (dapat berbeda per orang)</dd>
+          <dt>Tekanan darah</dt><dd>umumnya &lt; 130/80 mmHg</dd>
+        </dl>
+        <p style="margin-top:10px;color:var(--muted)">Target ditetapkan oleh dokter sesuai kondisi masing-masing pasien.</p>
+      </div>
+      <div class="card">
+        <h3>Gejala dan komplikasi bila tidak terkontrol</h3>
+        <p><strong>Gejala:</strong> sering haus, sering buang air kecil, berat badan turun tanpa sebab, mudah lelah, luka sulit sembuh, kesemutan. Pada sebagian orang tidak bergejala.</p>
+        <p><strong>Komplikasi:</strong> kerusakan mata, penyakit ginjal, gangguan saraf, serangan jantung dan stroke, serta luka kaki yang sulit sembuh.</p>
+      </div>
+    </section>
+
+    <!-- TIPS -->
+    <section class="page" id="tips">
+      <h2>Tips self-management</h2>
+      <div class="card">
+        <h3>Atur makan (prinsip 3J)</h3>
+        <ul>
+          <li><strong>Jadwal:</strong> 3 kali makan utama dan 2–3 selingan, jangan lewatkan waktu makan.</li>
+          <li><strong>Jumlah:</strong> sesuai kebutuhan kalori, tanyakan dokter atau ahli gizi.</li>
+          <li><strong>Jenis:</strong> ½ piring sayur, ¼ lauk rendah minyak, ¼ makanan pokok berserat.</li>
+          <li>Hindari minuman manis, kurangi gorengan, makanan olahan, dan garam berlebih.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Aktif bergerak</h3>
+        <ul>
+          <li>Sekitar 150 menit per minggu, 3–5 hari, jangan absen lebih dari 2 hari berturut-turut.</li>
+          <li>Pilih olahraga intensitas sedang: jalan cepat, senam, bersepeda.</li>
+          <li>Tambahkan latihan kekuatan otot 2–3 kali per minggu.</li>
+          <li>Bila gula darah sebelum olahraga di bawah 100 mg/dL, makan camilan karbohidrat dulu.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Pantau dan patuh pengobatan</h3>
+        <ul>
+          <li>Minum obat atau suntik insulin sesuai anjuran, jangan berhenti sendiri walau gula darah sudah normal.</li>
+          <li>Ukur gula darah secara teratur dan catat hasilnya.</li>
+          <li>Kontrol rutin, termasuk HbA1c (umumnya tiap 3 bulan).</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Rawat kaki setiap hari</h3>
+        <ul>
+          <li>Periksa telapak dan sela jari kaki, cari luka, lecet, atau kemerahan.</li>
+          <li>Cuci dan keringkan kaki, pakai pelembap (bukan di sela jari).</li>
+          <li>Potong kuku lurus. Selalu pakai alas kaki yang pas, jangan berjalan tanpa alas kaki.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Kebiasaan sehat lain</h3>
+        <ul>
+          <li>Berhenti merokok.</li>
+          <li>Jaga berat badan ideal, kelola stres, tidur 7–8 jam.</li>
+        </ul>
+      </div>
+      <div class="note"><strong>Kenali gula darah rendah (&lt; 70 mg/dL)</strong>Tanda: gemetar, keringat dingin, berdebar, pusing, lapar mendadak. Bila masih sadar, konsumsi sekitar 15 gram gula cepat serap (3–4 sendok teh gula atau ½ gelas teh manis), cek ulang setelah 15 menit, ulangi bila belum naik.</div>
+      <div class="note bad"><strong>Segera ke fasilitas kesehatan bila</strong>Pasien tidak sadar atau gula darah rendah tidak membaik, gula darah sangat tinggi disertai mual, muntah, sesak napas, atau sangat lemas, luka kaki memerah, bengkak, atau bernanah, serta nyeri dada atau lemah mendadak pada satu sisi tubuh.</div>
+    </section>
+
+    <!-- CHECKLIST -->
+    <section class="page" id="checklist">
+      <h2>Checklist pemantauan mingguan</h2>
+      <p class="lead">Centang kebiasaan sehat yang sudah kamu lakukan setiap hari dan isi gula darah puasa (contoh 110). Data tersimpan di perangkat.</p>
+      <div class="stat" id="stat"></div>
+      <div class="bar" aria-hidden="true"><i id="bar"></i></div>
+      <div class="tablewrap"><table id="tbl"></table></div>
+      <p class="legend">Gula darah puasa: <strong>hijau</strong> = 80–130 (sesuai target), <strong>oranye</strong> = di atas 130 atau 70–79, <strong>merah</strong> = di bawah 70 atau 250 ke atas (cari bantuan medis bila disertai gejala).</p>
+      <button class="btn" id="reset">Atur ulang checklist</button>
+    </section>
+
+    <!-- KUIS -->
+    <section class="page" id="kuis">
+      <h2>Evaluasi: kuis singkat</h2>
+      <div id="quizBox"></div>
+    </section>
+
+    <!-- REFERENSI -->
+    <section class="page" id="referensi">
+      <h2>Referensi</h2>
+      <ol class="refs">
+        <li>Perkumpulan Endokrinologi Indonesia (PERKENI). (2021). <em>Pedoman pengelolaan dan pencegahan diabetes melitus tipe 2 dewasa di Indonesia.</em> Jakarta: PB PERKENI.</li>
+        <li>American Diabetes Association. <em>Standards of care in diabetes</em> (edisi terbaru). <em>Diabetes Care.</em></li>
+        <li>International Diabetes Federation. <em>IDF Diabetes Atlas.</em> Brussels: IDF.</li>
+        <li>Kementerian Kesehatan Republik Indonesia. Materi edukasi diabetes melitus dan pedoman gizi seimbang (Isi Piringku). kemkes.go.id.</li>
+      </ol>
+      <p class="tip">Tip: sesuaikan daftar ini dengan sumber yang benar-benar kamu baca dan format sitasi dari dosenmu.</p>
+    </section>
+  </main>
+</div>
+
+<script>
+const store = {
+  get(k, d){ try{ const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; }catch(e){ return d; } },
+  set(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+};
+
+/* navigasi */
+const tabs = document.querySelectorAll('nav.tabs button');
+function go(id){
+  document.querySelectorAll('section.page').forEach(s => s.classList.toggle('active', s.id === id));
+  tabs.forEach(b => b.setAttribute('aria-selected', b.dataset.tab === id));
+  window.scrollTo({top:0});
+}
+tabs.forEach(b => b.addEventListener('click', () => go(b.dataset.tab)));
+document.querySelectorAll('[data-go]').forEach(b => b.addEventListener('click', () => go(b.dataset.go)));
+
+/* checklist mingguan */
+const habits = [
+  'Minum obat tepat waktu',
+  'Makan teratur (3J)',
+  'Batasi gula dan minuman manis',
+  'Olahraga 30 menit',
+  'Makan sayur dan buah',
+  'Periksa kaki',
+  'Tidur cukup'
+];
+const days = ['Sen','Sel','Rab','Kam','Jum','Sab','Min'];
+let data = store.get('kgd-week', null) || {c:{}, g:{}};
+function save(){ store.set('kgd-week', data); }
+
+function gClass(v){
+  if(!v) return '';
+  if(v < 70 || v >= 250) return 'bad';
+  if(v >= 80 && v <= 130) return 'ok';
+  return 'mid';
+}
+function renderTable(){
+  const t = document.getElementById('tbl');
+  let h = '<thead><tr><th>Kebiasaan</th>' + days.map(d => '<th>' + d + '</th>').join('') + '</tr></thead><tbody>';
+  habits.forEach((name, i) => {
+    h += '<tr><td>' + name + '</td>';
+    days.forEach((d, j) => {
+      const k = i + '-' + j;
+      h += '<td><input type="checkbox" data-k="' + k + '" aria-label="' + name + ', ' + d + '"' + (data.c[k] ? ' checked' : '') + '></td>';
+    });
+    h += '</tr>';
+  });
+  h += '<tr><td>Gula darah puasa (mg/dL)</td>';
+  days.forEach((d, j) => {
+    const v = data.g[j] || '';
+    h += '<td><input type="number" inputmode="numeric" min="20" max="600" placeholder="110" data-g="' + j + '" value="' + v + '" class="' + gClass(v) + '" aria-label="Gula darah puasa ' + d + '"></td>';
+  });
+  h += '</tr></tbody>';
+  t.innerHTML = h;
+  t.querySelectorAll('input[type=checkbox]').forEach(cb => cb.addEventListener('change', () => {
+    if(cb.checked) data.c[cb.dataset.k] = 1; else delete data.c[cb.dataset.k];
+    save(); updateStat();
+  }));
+  t.querySelectorAll('input[type=number]').forEach(inp => inp.addEventListener('input', () => {
+    const v = parseInt(inp.value, 10);
+    if(v) data.g[inp.dataset.g] = v; else delete data.g[inp.dataset.g];
+    inp.className = gClass(v);
+    save();
+  }));
+  updateStat();
+}
+function updateStat(){
+  const total = habits.length * days.length;
+  const n = Object.keys(data.c).length;
+  const pct = Math.round(n / total * 100);
+  document.getElementById('stat').textContent = n + ' dari ' + total + ' kebiasaan tercapai (' + pct + '%)';
+  document.getElementById('bar').style.width = pct + '%';
+}
+document.getElementById('reset').addEventListener('click', () => {
+  data = {c:{}, g:{}}; save(); renderTable();
+});
+
+/* kuis */
+const quiz = [
+  {q:'Manakah yang termasuk empat pilar penatalaksanaan DM tipe 2?', o:['Edukasi, terapi gizi, latihan jasmani, terapi obat','Obat, suplemen, tirah baring, diet ketat','Edukasi, operasi, diet cair, obat herbal','Latihan jasmani saja'], a:0, e:'Empat pilar: edukasi, terapi gizi medis, latihan jasmani, dan terapi farmakologis.'},
+  {q:'Prinsip "3J" dalam pengaturan makan pada pasien DM adalah…', o:['Jenis, jajan, jus','Jadwal, jumlah, jenis','Jam, jarak, jeda','Jumlah, jahe, jeruk'], a:1, e:'3J: jadwal makan teratur, jumlah sesuai kebutuhan, dan jenis makanan yang tepat.'},
+  {q:'Gula darah 62 mg/dL dengan tubuh gemetar dan keringat dingin. Pasien masih sadar. Tindakan pertama yang tepat adalah…', o:['Tidur dulu sampai membaik','Minum obat diabetes tambahan','Konsumsi sekitar 15 gram gula cepat serap, lalu cek ulang 15 menit','Berolahraga agar gula turun'], a:2, e:'Itu hipoglikemia. Beri gula cepat serap (sekitar 15 gram), cek ulang setelah 15 menit, dan ulangi bila perlu.'},
+  {q:'Aktivitas fisik yang dianjurkan untuk penderita DM tipe 2 adalah…', o:['Hanya saat gula darah tinggi','Sekitar 150 menit per minggu, intensitas sedang','Olahraga berat 1 kali sebulan','Tidak perlu, cukup minum obat'], a:1, e:'Sekitar 150 menit per minggu aktivitas aerobik intensitas sedang, dibagi 3–5 hari.'},
+  {q:'Perawatan kaki yang benar pada pasien DM adalah…', o:['Berjalan tanpa alas kaki agar sehat','Memeriksa kaki setiap hari dan selalu memakai alas kaki','Memotong kuku melengkung sependek mungkin','Mengabaikan luka kecil'], a:1, e:'Periksa kaki setiap hari, pakai alas kaki yang pas, dan segera tangani luka sekecil apa pun karena risiko infeksi tinggi.'},
+  {q:'Gejala khas yang sering muncul pada diabetes adalah…', o:['Sering haus, sering buang air kecil, dan berat badan turun tanpa sebab','Batuk lebih dari 2 minggu','Nyeri sendi saat pagi hari','Rambut rontok berat'], a:0, e:'Sering haus, sering buang air kecil, dan penurunan berat badan tanpa sebab adalah gejala khas, meski sebagian orang tidak bergejala.'},
+  {q:'Pemeriksaan HbA1c menggambarkan…', o:['Gula darah saat itu saja','Gula darah 1 jam setelah makan','Rata-rata kadar gula darah dalam sekitar 3 bulan terakhir','Fungsi ginjal'], a:2, e:'HbA1c mencerminkan rata-rata gula darah sekitar 3 bulan terakhir, sehingga dipakai untuk menilai pengendalian jangka panjang.'}
+];
+let qi = 0, score = 0;
+function renderQuiz(){
+  const box = document.getElementById('quizBox');
+  const pct = Math.round(qi / quiz.length * 100);
+  if(qi >= quiz.length){
+    const msg = score >= 5 ? 'Pemahamanmu sudah baik. Terus terapkan di rumah.' : 'Baca kembali materi dan tips, lalu coba lagi.';
+    box.innerHTML = '<div class="bar" aria-hidden="true"><i style="width:100%"></i></div><div class="card"><p>Skor akhir</p><p class="score">' + score + ' / ' + quiz.length + '</p><p>' + msg + '</p><button class="btn" id="again">Ulangi kuis</button> <button class="btn ghost" id="toMateri">Buka materi</button></div>';
+    document.getElementById('again').onclick = () => { qi = 0; score = 0; renderQuiz(); };
+    document.getElementById('toMateri').onclick = () => go('materi');
+    return;
+  }
+  const q = quiz[qi];
+  box.innerHTML = '<div class="q-meta">Soal ' + (qi+1) + ' dari ' + quiz.length + '</div><div class="bar" aria-hidden="true"><i style="width:' + pct + '%"></i></div><h3>' + q.q + '</h3><div id="opts"></div><div id="fb"></div>';
+  const opts = box.querySelector('#opts');
+  q.o.forEach((t, i) => {
+    const b = document.createElement('button');
+    b.className = 'opt'; b.textContent = t;
+    b.onclick = () => {
+      opts.querySelectorAll('button').forEach((x, j) => { x.disabled = true; if(j === q.a) x.classList.add('right'); });
+      if(i === q.a){ score++; } else { b.classList.add('wrong'); }
+      const fb = box.querySelector('#fb');
+      fb.innerHTML = '<p class="explain"><strong>' + (i === q.a ? 'Benar. ' : 'Belum tepat. ') + '</strong>' + q.e + '</p><button class="btn" id="next">' + (qi === quiz.length-1 ? 'Lihat skor' : 'Soal berikutnya') + '</button>';
+      fb.querySelector('#next').onclick = () => { qi++; renderQuiz(); };
+    };
+    opts.appendChild(b);
+  });
+}
+
+renderTable(); renderQuiz();
+</script>
+</body>
+</html>
